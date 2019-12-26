@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// SitemapIndex urls in xml
+// SitemapIndex struct
 type SitemapIndex struct {
 	Locations []string `xml:"sitemap>loc"`
 }
@@ -35,7 +35,10 @@ func main() {
 	bytes, _ := ioutil.ReadAll(resp.Body)
 	xml.Unmarshal(bytes, &s)
 
+	// range will iterate over data structure -- returns key and value
 	for _, Location := range s.Locations {
+		// Print location
+		// fmt.Printf("\n%s", Location)
 		Location = strings.TrimSpace(Location)
 		resp, err := http.Get(Location)
 		if err != nil {
@@ -44,13 +47,13 @@ func main() {
 		bytes, _ := ioutil.ReadAll(resp.Body)
 		xml.Unmarshal(bytes, &n)
 
-		//fmt.Printf("\n%s", n.Titles)
-
-		for idx, _ := range n.Titles {
-			newsMap[n.Titles[idx]] = NewsMap{n.Keywords[idx], n.Locations[idx]}
+		for idx := range n.Titles {
+			if n.Keywords != nil {
+				newsMap[n.Titles[idx]] = NewsMap{n.Keywords[idx], n.Locations[idx]}
+			}
 		}
-
 	}
+
 	for idx, data := range newsMap {
 		fmt.Println("\n\n\n", idx)
 		fmt.Println("\n", data.Keywords)
