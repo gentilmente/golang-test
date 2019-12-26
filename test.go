@@ -22,7 +22,7 @@ type News struct {
 
 // NewsMap k,v
 type NewsMap struct {
-	Keywords string
+	Keyword  string
 	Location string
 }
 
@@ -47,16 +47,14 @@ func main() {
 		bytes, _ := ioutil.ReadAll(resp.Body)
 		xml.Unmarshal(bytes, &n)
 
-		for idx := range n.Titles {
-			if n.Keywords != nil {
-				newsMap[n.Titles[idx]] = NewsMap{n.Keywords[idx], n.Locations[idx]}
-			}
+		for idx := range n.Keywords {
+			newsMap[n.Titles[idx]] = NewsMap{n.Keywords[idx], n.Locations[idx]}
 		}
 	}
 
 	for idx, data := range newsMap {
 		fmt.Println("\n\n\n", idx)
-		fmt.Println("\n", data.Keywords)
+		fmt.Println("\n", data.Keyword)
 		fmt.Println("\n", data.Location)
 
 	}
