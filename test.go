@@ -2,42 +2,33 @@ package main
 
 import (
 	"encoding/xml"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
 
-type sitemapIndex struct {
-	Locations []Location `xml:"sitemap"`
+type SitemapIndex struct {
+	Locations []string `xml:"sitemap>loc"`
 }
 
-type Location struct {
-	Loc string `xml:"loc"`
+type News struct {
+	Titles    []string `xml:"url>news>title"`
+	Keywords  []string `xml:"url>news>Keywords"`
+	Locations []string `xml:"url>loc"`
 }
-
-func (l Location) String() string {
-	return fmt.Sprint(l.Loc)
-}
-
-/*
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1> hola </h1>")
-	fmt.Fprintf(w, "<p> %s  </p>", "sarasa")
-}*/
 
 func main() {
+	var s SitemapIndex
+	var n News
+
 	resp, _ := http.Get("https://www.washingtonpost.com/news-sitemaps/index.xml")
 	bytes, _ := ioutil.ReadAll(resp.Body)
-	//stringBody := string(bytes)
-	resp.Body.Close()
-
-	var s sitemapIndex
 	xml.Unmarshal(bytes, &s)
+
 	for _, l := range s.Locations {
-		fmt.Printf("\n%s", l)
+		resp, _ := http.Get(l)
+		bytes, _ := ioutil.ReadAll(resp.Body)
+		xml.Unmarshal(bytes, &n)
 
+		//fmt.Printf("\n%s", l)
 	}
-
-	//http.HandleFunc("/", indexHandler)
-	//http.ListenAndServe(":8000", nil)
 }
