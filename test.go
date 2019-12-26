@@ -37,13 +37,8 @@ func main() {
 
 	// range will iterate over data structure -- returns key and value
 	for _, Location := range s.Locations {
-		// Print location
-		// fmt.Printf("\n%s", Location)
 		Location = strings.TrimSpace(Location)
-		resp, err := http.Get(Location)
-		if err != nil {
-			fmt.Println(err)
-		}
+		resp, _ := http.Get(Location)
 		bytes, _ := ioutil.ReadAll(resp.Body)
 		xml.Unmarshal(bytes, &n)
 
