@@ -33,8 +33,10 @@ func main() {
 
 	var s sitemapIndex
 	xml.Unmarshal(bytes, &s)
+	for _, l := range s.Locations {
+		fmt.Printf("\n%s", l)
 
-	fmt.Println(s.Locations)
+	}
 
 	//http.HandleFunc("/", indexHandler)
 	//http.ListenAndServe(":8000", nil)
